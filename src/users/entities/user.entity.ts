@@ -2,7 +2,6 @@ import {
   Column,
   Entity,
   Index,
-  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -11,12 +10,8 @@ import { IsEmail, IsNotEmpty } from 'class-validator';
 import { Exclude } from 'class-transformer';
 import { CreateDateColumn } from 'typeorm/decorator/columns/CreateDateColumn';
 import { Review } from '../../reviews/entities/review.entity';
+import { UserRole } from '../types/userRole';
 
-export enum UserRole {
-  Admin = 'admin',
-  Mentor = 'mentor',
-  Student = 'student',
-}
 @Entity()
 export class User {
   @PrimaryGeneratedColumn({ type: 'int' })
@@ -39,9 +34,9 @@ export class User {
     enum: UserRole,
     default: UserRole.Student,
   })
-  role: string;
+  role: UserRole;
 
-  @Column({ select: false })
+  @Column()
   @Exclude()
   password: string;
 

@@ -8,21 +8,15 @@ import {
 import { CreateDateColumn } from 'typeorm/decorator/columns/CreateDateColumn';
 import { IsNotEmpty } from 'class-validator';
 import { User } from '../../users/entities/user.entity';
-
-export enum ReviewStatus {
-  Scheduled = 'scheduled',
-  InProgress = 'inProgress',
-  Complete = 'complete',
-  Cancelled = 'cancelled',
-}
+import { ReviewStatus } from '../types/reviewStatus';
 
 @Entity()
 export class Review {
   @PrimaryGeneratedColumn({ type: 'int' })
   id: number;
 
-  @Column()
-  grade: number;
+  @Column({ nullable: true })
+  grade: number | null;
 
   @IsNotEmpty()
   @Column()
@@ -44,6 +38,9 @@ export class Review {
   })
   student: User;
 
+  @Column()
+  studentId: number;
+
   @ManyToOne(() => User, (mentor) => mentor.mentorSessions, {
     orphanedRowAction: 'delete',
     onDelete: 'CASCADE',
@@ -51,6 +48,9 @@ export class Review {
     lazy: true,
   })
   mentor: User;
+
+  @Column()
+  mentorId: number;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;

@@ -13,6 +13,8 @@ services:
     volumes:
       - ./:/home/node/app/
     command: npm run start
+    depends_on:
+      - db
 
   db:
     image: postgres

@@ -5,9 +5,13 @@ export interface AppConfig {
   database: TypeOrmModuleOptions;
   version: string;
   environment: string;
+  auth: {
+    jwtSecret: string;
+  };
+  isSeedEnabled: boolean;
 }
 
-const appConfig: AppConfig = {
+const appConfig = (): AppConfig => ({
   database: {
     type: 'postgres',
     database: process.env.DB_DATABASE,
@@ -23,6 +27,10 @@ const appConfig: AppConfig = {
   },
   version: process.env.VERSION,
   environment: getEnvironment(),
-};
+  auth: {
+    jwtSecret: process.env.AUTH_JWT_SECRET,
+  },
+  isSeedEnabled: !!+process.env.SEED_ENABLED,
+});
 
 export default appConfig;

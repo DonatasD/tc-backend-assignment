@@ -1,15 +1,40 @@
 import { Injectable } from '@nestjs/common';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { UpdateReviewDto } from './dto/update-review.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Review } from './entities/review.entity';
 
 @Injectable()
 export class ReviewsService {
+  constructor(
+    @InjectRepository(Review)
+    private reviewRepository: Repository<Review>,
+  ) {}
+
   create(createReviewDto: CreateReviewDto) {
     return 'This action adds a new review';
   }
 
   findAll() {
-    return `This action returns all reviews`;
+    return this.reviewRepository.find();
+  }
+
+  findAllByMentorId(mentorId: number) {
+    return this.reviewRepository.findBy({ mentorId });
+  }
+
+  findAllByStudentId(studentId: number) {
+    return this.reviewRepository.findBy({ studentId });
+  }
+
+  findAllByUserId(userId: number) {
+    return this.reviewRepository.find({
+      where: {
+        mentorId: userId,
+        studentId: userId,
+      },
+    });
   }
 
   findOne(id: number) {
