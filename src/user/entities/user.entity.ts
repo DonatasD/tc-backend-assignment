@@ -9,7 +9,7 @@ import {
 import { IsEmail, IsNotEmpty } from 'class-validator';
 import { Exclude } from 'class-transformer';
 import { CreateDateColumn } from 'typeorm/decorator/columns/CreateDateColumn';
-import { Review } from '../../reviews/entities/review.entity';
+import { Review } from '../../review/entities/review.entity';
 import { UserRole } from '../types/userRole';
 
 @Entity()
@@ -50,7 +50,7 @@ export class User {
     cascade: true,
     eager: true,
   })
-  reviews?: Review[];
+  review?: Review[];
 
   @OneToMany(() => Review, (review) => review.mentor, {
     cascade: true,

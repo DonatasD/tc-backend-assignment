@@ -9,8 +9,8 @@ export interface AppConfig {
     jwtSecret: string;
   };
   seed: {
-    usersEnabled: boolean;
-    reviewsEnabled: boolean;
+    userEnabled: boolean;
+    reviewEnabled: boolean;
   };
 }
 
@@ -34,8 +34,8 @@ const appConfig = (): AppConfig => ({
     jwtSecret: process.env.AUTH_JWT_SECRET,
   },
   seed: {
-    usersEnabled: !!+process.env.SEED_USERS_ENABLED,
-    reviewsEnabled: !!+process.env.SEED_REVIEWS_ENABLED,
+    userEnabled: !!+process.env.SEED_USERS_ENABLED,
+    reviewEnabled: !!+process.env.SEED_REVIEWS_ENABLED,
   },
 });
 

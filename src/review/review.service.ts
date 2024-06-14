@@ -5,15 +5,15 @@ import { In, LessThan, MoreThan, Not, Repository } from 'typeorm';
 import { Review } from './entities/review.entity';
 import { ReviewStatus } from './types/reviewStatus';
 import { addHours, isAfter, toDate } from 'date-fns';
-import { UsersService } from '../users/users.service';
-import { UserRole } from '../users/types/userRole';
+import { UserService } from '../user/user.service';
+import { UserRole } from '../user/types/userRole';
 
 @Injectable()
-export class ReviewsService {
+export class ReviewService {
   constructor(
     @InjectRepository(Review)
     private reviewRepository: Repository<Review>,
-    private userService: UsersService,
+    private userService: UserService,
   ) {}
 
   async create(createReviewDto: CreateReviewDto) {
@@ -120,7 +120,7 @@ export class ReviewsService {
     const startRange = toDate(createReviewDto.startDateTime);
     const endRange = addHours(startRange, 1);
 
-    const conflictingReviews = await this.reviewRepository.find({
+    const conflictingReview = await this.reviewRepository.find({
       where: [
         {
           startDateTime: LessThan(endRange),
@@ -137,9 +137,9 @@ export class ReviewsService {
       ],
     });
     Logger.debug(
-      `Review creation conflicts with: ${conflictingReviews.map((review) => review.id)}`,
+      `Review creation conflicts with: ${conflictingReview.map((review) => review.id)}`,
     );
 
-    return conflictingReviews.length === 0;
+    return conflictingReview.length === 0;
   }
 }

@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { CreateDateColumn } from 'typeorm/decorator/columns/CreateDateColumn';
 import { IsNotEmpty } from 'class-validator';
-import { User } from '../../users/entities/user.entity';
+import { User } from '../../user/entities/user.entity';
 import { ReviewStatus } from '../types/reviewStatus';
 
 @Entity()
@@ -36,7 +36,7 @@ export class Review {
   @Column({ type: 'timestamp' })
   endDateTime: Date | string;
 
-  @ManyToOne(() => User, (student) => student.reviews, {
+  @ManyToOne(() => User, (student) => student.review, {
     orphanedRowAction: 'delete',
     onDelete: 'CASCADE',
     onUpdate: 'CASCADE',

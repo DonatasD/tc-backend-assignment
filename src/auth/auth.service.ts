@@ -1,19 +1,18 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
 import * as bcrypt from 'bcrypt';
 import { AuthDto } from './dto/auth.dto';
-import { SuccessAuthDto } from './dto/success-auth.dto';
+import { SuccessAuthDto } from './dto/successAuth.dto';
 import { JwtPayload } from './types/jwtPayload';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../users/entities/user.entity';
+import { User } from '../user/entities/user.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    private userRepository: Repository<User>,
     private jwtService: JwtService,
   ) {}
 
@@ -22,7 +21,7 @@ export class AuthService {
       if (!authDto.password) {
         throw new UnauthorizedException();
       }
-      const user = await this.usersRepository.findOne({
+      const user = await this.userRepository.findOne({
         select: {
           password: true,
           email: true,

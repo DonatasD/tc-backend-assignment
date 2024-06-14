@@ -3,8 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { HealthModule } from './health/health.module';
 import { getEnvFilePaths } from './utils/environment';
-import { UsersModule } from './users/users.module';
-import { ReviewsModule } from './reviews/reviews.module';
+import { UserModule } from './user/user.module';
+import { ReviewModule } from './review/review.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import appConfig from './config/appConfig';
@@ -40,8 +40,8 @@ import { RolesGuard } from './auth/roles.guard';
       inject: [ConfigService],
     }),
     HealthModule,
-    UsersModule,
-    ReviewsModule,
+    UserModule,
+    ReviewModule,
     AuthModule,
     SeederModule,
   ],

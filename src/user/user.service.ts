@@ -7,28 +7,28 @@ import * as bcrypt from 'bcrypt';
 import { addHours, toDate } from 'date-fns';
 import { FindAvailableMentorsDto } from './dto/findAvailableMentors.dto';
 import { UserRole } from './types/userRole';
-import { ReviewStatus } from '../reviews/types/reviewStatus';
+import { ReviewStatus } from '../review/types/reviewStatus';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    private userRepository: Repository<User>,
   ) {}
 
   findOneById(id: number) {
-    return this.usersRepository.findOneBy({ id });
+    return this.userRepository.findOneBy({ id });
   }
 
   findOneByEmail(email: string) {
-    return this.usersRepository.findOneBy({ email });
+    return this.userRepository.findOneBy({ email });
   }
 
   async findAvailable(findAvailableMentorsDto: FindAvailableMentorsDto) {
     const startRange = toDate(findAvailableMentorsDto.startDateTime);
     const endRange = addHours(startRange, 1);
 
-    return this.usersRepository.find({
+    return this.userRepository.find({
       select: {
         id: true,
         email: true,
@@ -47,7 +47,7 @@ export class UsersService {
 
   async create(user: CreateUserDto) {
     try {
-      const existingUser = await this.usersRepository.findOne({
+      const existingUser = await this.userRepository.findOne({
         where: {
           email: user.email,
         },
@@ -57,7 +57,7 @@ export class UsersService {
       }
       const { password, ...rest } = user;
       const hashedPassword = await bcrypt.hash(password, 10);
-      return this.usersRepository.save({
+      return this.userRepository.save({
         password: hashedPassword,
         ...rest,
       });

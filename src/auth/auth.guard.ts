@@ -8,7 +8,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { ConfigService } from '@nestjs/config';
-import { UsersService } from '../users/users.service';
+import { UserService } from '../user/user.service';
 import { JwtPayload } from './types/jwtPayload';
 import { IS_PUBLIC_KEY } from '../utils/public.decorator';
 import { Reflector } from '@nestjs/core';
@@ -18,7 +18,7 @@ export class AuthGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
     private configService: ConfigService,
-    private userService: UsersService,
+    private userService: UserService,
     private reflector: Reflector,
   ) {}
 
@@ -48,7 +48,7 @@ export class AuthGuard implements CanActivate {
         Logger.error('Could not find user');
         throw new UnauthorizedException();
       }
-
+      // Add user entity to request for future access
       request['user'] = user;
     } catch {
       throw new UnauthorizedException();
