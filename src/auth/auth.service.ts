@@ -5,11 +5,15 @@ import { AuthDto } from './dto/auth.dto';
 import { SuccessAuthDto } from './dto/success-auth.dto';
 import { JwtPayload } from './types/jwtPayload';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from '../users/entities/user.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private usersService: UsersService,
+    @InjectRepository(User)
+    private usersRepository: Repository<User>,
     private jwtService: JwtService,
   ) {}
 
@@ -18,7 +22,17 @@ export class AuthService {
       if (!authDto.password) {
         throw new UnauthorizedException();
       }
-      const user = await this.usersService.findOneByEmail(authDto.email);
+      const user = await this.usersRepository.findOne({
+        select: {
+          password: true,
+          email: true,
+          id: true,
+          role: true,
+        },
+        where: {
+          email: authDto.email,
+        },
+      });
 
       if (!user) {
         throw new UnauthorizedException();

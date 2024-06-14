@@ -18,6 +18,9 @@ export class Review {
   @Column({ nullable: true })
   grade: number | null;
 
+  @Column({ nullable: true, type: 'text' })
+  comment: string | null;
+
   @IsNotEmpty()
   @Column()
   @Column({
@@ -28,7 +31,10 @@ export class Review {
   status: ReviewStatus;
 
   @Column({ type: 'timestamp' })
-  startDateTime: Date;
+  startDateTime: Date | string;
+
+  @Column({ type: 'timestamp' })
+  endDateTime: Date | string;
 
   @ManyToOne(() => User, (student) => student.reviews, {
     orphanedRowAction: 'delete',

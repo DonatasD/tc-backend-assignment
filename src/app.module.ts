@@ -11,6 +11,7 @@ import appConfig from './config/appConfig';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { SeederModule } from './seeder/seeder.module';
+import { RolesGuard } from './auth/roles.guard';
 
 @Global()
 @Module({
@@ -49,6 +50,10 @@ import { SeederModule } from './seeder/seeder.module';
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })

@@ -1,21 +1,22 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   Param,
   Patch,
   Post,
+  Put,
   Request,
 } from '@nestjs/common';
 import { ReviewsService } from './reviews.service';
-import { CreateReviewDto } from './dto/create-review.dto';
-import { UpdateReviewDto } from './dto/update-review.dto';
+import { CreateReviewDto } from './dto/createReview.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../utils/roles.decorator';
 import { AuthenticatedRequest } from '../auth/types/authenticatedRequest';
 import { Review } from './entities/review.entity';
 import { UserRole } from '../users/types/userRole';
+import { ReviewStatus } from './types/reviewStatus';
+import { CompleteReviewDto } from './dto/completeReview.dto';
 
 @ApiTags('Reviews')
 @Controller('reviews')
@@ -51,17 +52,35 @@ export class ReviewsController {
 
   @Roles(UserRole.Admin)
   @Get('/users/:userId')
-  findOne(@Param('userId') userId: number) {
+  findAllByUserId(@Param('userId') userId: number) {
     return this.reviewsService.findAllByUserId(userId);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateReviewDto: UpdateReviewDto) {
-    return this.reviewsService.update(+id, updateReviewDto);
+  @Roles(UserRole.Mentor, UserRole.Student)
+  @Patch(':id/cancel')
+  cancel(@Param('id') id: number) {
+    return this.reviewsService.updateReviewStatus(id, {
+      status: ReviewStatus.Cancelled,
+    });
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.reviewsService.remove(+id);
+  @Roles(UserRole.Mentor)
+  @Patch(':id/start')
+  start(@Param('id') id: number) {
+    return this.reviewsService.updateReviewStatus(id, {
+      status: ReviewStatus.InProgress,
+    });
+  }
+
+  @Roles(UserRole.Mentor)
+  @Patch(':id/complete')
+  complete(
+    @Param('id') id: number,
+    @Body() completeReviewDto: CompleteReviewDto,
+  ) {
+    return this.reviewsService.updateReviewStatus(id, {
+      status: ReviewStatus.Complete,
+      ...completeReviewDto,
+    });
   }
 }
