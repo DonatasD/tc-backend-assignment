@@ -21,6 +21,11 @@ Swagger is available on http://localhost:8080/swagger/ when starting the applica
 
 ## Design Explanations
 
+### Authentication
+Requests are authenticated with jwt tokens provided in Authorization Header with Bearer prefix.
+Public endpoints are marked with @Public decorator.
+Role specific endpoints are marked with @Roles decorator. Passwords are hashed using bcrypt.
+
 ### Table Structure
 Students, Mentors and Admins are stored in user table. This user type is persisted in role column.
 
