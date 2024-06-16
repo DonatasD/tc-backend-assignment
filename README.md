@@ -26,6 +26,15 @@ Requests are authenticated with jwt tokens provided in Authorization Header with
 Public endpoints are marked with @Public decorator.
 Role specific endpoints are marked with @Roles decorator. Passwords are hashed using bcrypt.
 
+### Seeding and Migrations
+Seeding is done in bootstrap script, using seeder module.
+Skipping seeding or enabling seeding can be done with .env variables (0 - disabled, 1 - enabled)
+* SEED_USERS_ENABLED
+* SEED_REVIEWS_ENABLED
+
+Didn't create TypeORM migration files using typeorm cli. However, synchronization should be sufficient to create needed tables
+when starting the application.
+
 ### Table Structure
 Students, Mentors and Admins are stored in user table. This user type is persisted in role column.
 
