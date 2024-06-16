@@ -16,7 +16,7 @@ import {
 import { CreateReviewDto } from '../review/dto/createReview.dto';
 import { ReviewService } from '../review/review.service';
 import { ReviewStatus } from '../review/types/reviewStatus';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 
 const ADMIN_COUNT = 2;
 const MENTOR_COUNT = 3;

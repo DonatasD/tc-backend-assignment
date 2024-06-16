@@ -3,6 +3,10 @@ import { UserRole } from '../types/userRole';
 import { IsEmail, IsEnum, IsNotEmpty } from 'class-validator';
 
 export class CreateUserDto {
+  constructor(createUserDto: Partial<CreateUserDto>) {
+    Object.assign(this, createUserDto);
+  }
+
   @ApiProperty({ example: 'name' })
   @IsNotEmpty()
   name: string;

@@ -4,6 +4,10 @@ import { IsValidReviewStartDate } from '../../utils/isValidReviewStartDate.decor
 import { Type } from 'class-transformer';
 
 export class FindAvailableMentorsDto {
+  constructor(findAvailableMentorsDto: Partial<FindAvailableMentorsDto>) {
+    Object.assign(this, findAvailableMentorsDto);
+  }
+
   @ApiProperty({ type: Date })
   @Type(() => Date)
   @IsDate()

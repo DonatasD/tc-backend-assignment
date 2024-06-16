@@ -4,6 +4,10 @@ import { IsValidReviewStartDate } from '../../utils/isValidReviewStartDate.decor
 import { Type } from 'class-transformer';
 
 export class CreateReviewDto {
+  constructor(createReviewDto: Partial<CreateReviewDto>) {
+    Object.assign(this, createReviewDto);
+  }
+
   @ApiProperty()
   @IsInt()
   mentorId: number;

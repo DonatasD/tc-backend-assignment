@@ -18,11 +18,11 @@ import { ReviewStatus } from './types/reviewStatus';
 import { CompleteReviewDto } from './dto/completeReview.dto';
 
 @ApiTags('Review')
-@Controller('review')
+@Controller('reviews')
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
-  @Roles(UserRole.Mentor, UserRole.Student)
+  @Roles(UserRole.Student)
   @Post()
   create(@Body() createReviewDto: CreateReviewDto) {
     return this.reviewService.create(createReviewDto);
@@ -41,32 +41,32 @@ export class ReviewController {
         return this.reviewService.findAll();
       }
       case UserRole.Student: {
-        return this.reviewService.findAllByStudentId(user.id);
+        return this.reviewService.findByStudentId(user.id);
       }
       case UserRole.Mentor: {
-        return this.reviewService.findAllByMentorId(user.id);
+        return this.reviewService.findByMentorId(user.id);
       }
     }
   }
 
   @Roles(UserRole.Admin)
-  @Get('/user/:userId')
+  @Get('/users/:userId')
   findAllByUserId(@Param('userId') userId: number) {
-    return this.reviewService.findAllByUserId(userId);
+    return this.reviewService.findByUserId(userId);
   }
 
   @Roles(UserRole.Mentor, UserRole.Student)
   @Patch(':id/cancel')
-  cancel(@Param('id') id: number) {
-    return this.reviewService.updateReviewStatus(id, {
+  cancel(@Param('id') id: number, @Request() req: AuthenticatedRequest) {
+    return this.reviewService.updateReviewStatus(id, req.user.id, {
       status: ReviewStatus.Cancelled,
     });
   }
 
   @Roles(UserRole.Mentor)
   @Patch(':id/start')
-  start(@Param('id') id: number) {
-    return this.reviewService.updateReviewStatus(id, {
+  start(@Param('id') id: number, @Request() req: AuthenticatedRequest) {
+    return this.reviewService.updateReviewStatus(id, req.user.id, {
       status: ReviewStatus.InProgress,
     });
   }
@@ -76,8 +76,9 @@ export class ReviewController {
   complete(
     @Param('id') id: number,
     @Body() completeReviewDto: CompleteReviewDto,
+    @Request() req: AuthenticatedRequest,
   ) {
-    return this.reviewService.updateReviewStatus(id, {
+    return this.reviewService.updateReviewStatus(id, req.user.id, {
       status: ReviewStatus.Complete,
       ...completeReviewDto,
     });

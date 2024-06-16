@@ -12,6 +12,10 @@ import { ReviewStatus } from '../types/reviewStatus';
 
 @Entity()
 export class Review {
+  constructor(review: Partial<Review>) {
+    Object.assign(this, review);
+  }
+
   @PrimaryGeneratedColumn({ type: 'int' })
   id: number;
 

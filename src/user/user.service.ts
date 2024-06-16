@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/createUser.dto';
 import { In, LessThan, MoreThan, Not, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { addHours, toDate } from 'date-fns';
 import { FindAvailableMentorsDto } from './dto/findAvailableMentors.dto';
 import { UserRole } from './types/userRole';
@@ -24,7 +24,7 @@ export class UserService {
     return this.userRepository.findOneBy({ email });
   }
 
-  async findAvailable(findAvailableMentorsDto: FindAvailableMentorsDto) {
+  async findAvailableMentors(findAvailableMentorsDto: FindAvailableMentorsDto) {
     const startRange = toDate(findAvailableMentorsDto.startDateTime);
     const endRange = addHours(startRange, 1);
 

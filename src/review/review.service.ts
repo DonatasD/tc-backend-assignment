@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { CreateReviewDto } from './dto/createReview.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, LessThan, MoreThan, Not, Repository } from 'typeorm';
@@ -32,15 +37,15 @@ export class ReviewService {
     return this.reviewRepository.find();
   }
 
-  async findAllByMentorId(mentorId: number) {
+  async findByMentorId(mentorId: number) {
     return this.reviewRepository.findBy({ mentorId });
   }
 
-  async findAllByStudentId(studentId: number) {
+  async findByStudentId(studentId: number) {
     return this.reviewRepository.findBy({ studentId });
   }
 
-  async findAllByUserId(userId: number) {
+  async findByUserId(userId: number) {
     return this.reviewRepository.find({
       where: [
         {
@@ -55,13 +60,24 @@ export class ReviewService {
 
   async updateReviewStatus(
     id: number,
+    userId: number,
     {
       status,
       grade,
       comment,
     }: { status: ReviewStatus; grade?: number; comment?: string },
   ) {
-    const review = await this.reviewRepository.findOneBy({ id });
+    const now = new Date();
+    const review = await this.reviewRepository.findOneBy({
+      id,
+    });
+    if (
+      !review ||
+      (review.studentId !== userId && review.mentorId !== userId)
+    ) {
+      throw new ForbiddenException();
+    }
+
     if (!this.isValidStatusTransition(review.status, status)) {
       Logger.error(`Unable to transition from ${review.status} to ${status}`);
       throw new BadRequestException(
@@ -71,7 +87,7 @@ export class ReviewService {
 
     if (
       status === ReviewStatus.InProgress &&
-      !isAfter(review.startDateTime, new Date())
+      !isAfter(now, review.startDateTime)
     ) {
       Logger.error('Unable to start review. Too early');
       throw new BadRequestException('Unable to start review. Too early');
@@ -128,12 +144,15 @@ export class ReviewService {
           mentorId: createReviewDto.mentorId,
           status: Not(In([ReviewStatus.Cancelled])),
         },
-        {
+        /*Requirements didn't specify that student shouldn't have conflicting
+        reviews for given timeslot. This check should be added if we want to assure
+        that student don't have conflicting session*/
+        /*{
           startDateTime: LessThan(endRange),
           endDateTime: MoreThan(startRange),
           studentId: createReviewDto.studentId,
           status: Not(In([ReviewStatus.Cancelled])),
-        },
+        },*/
       ],
     });
     Logger.debug(

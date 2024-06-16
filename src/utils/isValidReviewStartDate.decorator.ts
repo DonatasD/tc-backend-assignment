@@ -13,7 +13,7 @@ export const IsValidReviewStartDate = (
       options: validationOptions,
       validator: {
         validate(value: Date) {
-          return value.getTime() % minutesToMilliseconds(30) === 0;
+          return value && value.getTime() % minutesToMilliseconds(30) === 0;
         },
         defaultMessage() {
           return `Time is accepted in 30 minute intervals`;

@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/createUser.dto';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -8,7 +8,7 @@ import { FindAvailableMentorsDto } from './dto/findAvailableMentors.dto';
 import { UserDto } from './dto/user.dto';
 
 @ApiTags('User')
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -26,13 +26,14 @@ export class UserController {
   }
 
   @Roles(UserRole.Student)
-  @Post('/find-available-mentors')
+  @Get('/available-mentors')
   @ApiOperation({ summary: 'Finds available mentors for given timeslot' })
   @ApiOkResponse({ type: [UserDto] })
-  async findAvailable(
-    @Body() findAvailableMentorsDto: FindAvailableMentorsDto,
+  async findAvailableMentors(
+    @Query()
+    findAvailableMentorsDto: FindAvailableMentorsDto,
   ): Promise<UserDto[]> {
-    const availableMentors = await this.userService.findAvailable(
+    const availableMentors = await this.userService.findAvailableMentors(
       findAvailableMentorsDto,
     );
     return availableMentors.map((mentor) => ({
