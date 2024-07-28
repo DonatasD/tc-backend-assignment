@@ -28,7 +28,7 @@ export class UserService {
     const startRange = toDate(findAvailableMentorsDto.startDateTime);
     const endRange = addHours(startRange, 1);
 
-    return this.userRepository.find({
+    const bookedMentors = await this.userRepository.find({
       select: {
         id: true,
         email: true,
@@ -43,6 +43,21 @@ export class UserService {
         },
       },
     });
+
+    const bookedMentorIds = bookedMentors.map((mentor) => mentor.id);
+
+    const availableMentors = await this.userRepository.find({
+      select: {
+        id: true,
+        email: true,
+        name: true,
+      },
+      where: {
+        role: UserRole.Mentor,
+        id: Not(In(bookedMentorIds)),
+      },
+    });
+    return availableMentors;
   }
 
   async create(user: CreateUserDto) {

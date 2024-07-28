@@ -1,23 +1,6 @@
 version: "3"
 
 services:
-  api:
-    user:
-      node
-    build:
-      context: .
-    env_file:
-      - .env
-    ports:
-      - ${PORT}:${PORT}
-    volumes:
-      - ./:/home/node/app/
-    command: npm run start
-    depends_on:
-      - db
-    environment:
-      - DB_HOST=db
-
   db:
     image: postgres
     env_file:

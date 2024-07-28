@@ -3,17 +3,17 @@
 
 Assignment for Turing College interview. REST API to handle user and review entities.
 
-| Endpoint                      | Admin | Mentor | Student | Description                                                                             |
-|-------------------------------|-------|--------|---------|-----------------------------------------------------------------------------------------|
-| POST /auth                    | +     | +      | +       | Authentication endpoint to get JWT token                                                |
-| POST /users                   | +     | -      | -       | Endpoint to create a user                                                               |
-| POST /users/available-mentors | -     | -      | +       | Endpoint for students to find available mentors                                         |
-| POST /reviews                 | -     | -      | +       | Endpoint for Students to schedule review session                                        |
-| GET /reviews                  | +     | +      | +       | Endpoint for Admin to get all reviews and for students and mentors to get their reviews |
-| GET /reviews/users/:userId    | +     | -      | -       | Endpoint for Admin to get all reviews for specific user                                 |
-| PATCH /reviews/:id/cancel     | -     | +      | +       | Endpoint for Students and Mentors to cancel their reviews until review has started      |
-| PATCH /reviews/:id/complete   | -     | +      | -       | Endpoint for Mentors to complete their and provide grade with feedback                  |
-| PATCH /reviews/:id/start      | -     | +      | -       | Endpoint for Mentors to start their review if the scheduled time has come               |
+| Endpoint                     | Admin | Mentor | Student | Description                                                                             |
+|------------------------------|-------|--------|---------|-----------------------------------------------------------------------------------------|
+| POST /auth                   | +     | +      | +       | Authentication endpoint to get JWT token                                                |
+| POST /users                  | +     | -      | -       | Endpoint to create a user                                                               |
+| GET /users/available-mentors | -     | -      | +       | Endpoint for students to find available mentors                                         |
+| POST /reviews                | -     | -      | +       | Endpoint for Students to schedule review session                                        |
+| GET /reviews                 | +     | +      | +       | Endpoint for Admin to get all reviews and for students and mentors to get their reviews |
+| GET /reviews/users/:userId   | +     | -      | -       | Endpoint for Admin to get all reviews for specific user                                 |
+| PATCH /reviews/:id/cancel    | -     | +      | +       | Endpoint for Students and Mentors to cancel their reviews until review has started      |
+| PATCH /reviews/:id/complete  | -     | +      | -       | Endpoint for Mentors to complete their and provide grade with feedback                  |
+| PATCH /reviews/:id/start     | -     | +      | -       | Endpoint for Mentors to start their review if the scheduled time has come               |
 
 Postman Collection for playing with API can be found here https://www.postman.com/donatasdaubar/workspace/turing-college-assignment
 
@@ -83,8 +83,8 @@ $ npm install
 ### Running Postgres database
 
 ```bash
-# Running postgres without api
-docker-compose up --scale api=0
+# Running postgres
+docker-compose up
 ```
 
 ### Running Application
@@ -105,9 +105,4 @@ $ npm run test:e2e
 
 # test coverage
 $ npm run test:cov
-```
-
-### Running Application with Docker Compose
-```bash
-docker-compose up
 ```
